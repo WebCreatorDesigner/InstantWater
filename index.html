@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- 👆 Makes sure special characters display correctly -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 👆 This is what makes your page responsive on mobile! -->
+
+  <title>InstantWater — Just Add Water</title>
+
+  <!-- Google Font — feel free to swap this out at fonts.google.com -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poiret+One&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES (variables)
+       Change these to retheme the whole page!
+    ============================================= */
+    :root {
+      --color-bg:       #0a0a0f;
+      --color-surface:  #13131a;
+      --color-accent:   #5ca4d4;
+      --color-text:     #f0f0f0;
+      --color-muted:    #5ca4d4;
+      --font-display:   'Poiret One', sans-serif;
+      --font-body:      'DM Sans', sans-serif;
+      --radius:         12px;
+      --max-width:      1100px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =============================================
+       NAVBAR
+       Try: make this "sticky" with position: sticky; top: 0;
+    ============================================= */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      /* TODO: add position: sticky; top: 0; and a background here */
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span {
+      color: var(--color-accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--color-muted);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-text);
+    }
+
+    /* =============================================
+       HERO SECTION — with video background
+    ============================================= */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem;
+      height: 100vh;          /* fills the full screen height */
+      position: relative;     /* lets children use position: absolute */
+      overflow: hidden;       /* clips the video to the section boundaries */
+    }
+
+    /* The video element — stretched to fill the hero */
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;      /* crops to fill without distorting */
+      z-index: 0;             /* sits behind everything else */
+      opacity: 0.3;  /* 👈 add this line */
+    }
+
+    /* Dark overlay on top of the video — adjust 0.55 to taste:
+       lower = more video visible, higher = darker / more readable */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;               /* shorthand for top/right/bottom/left: 0 */
+      background: #5ca4d428;
+      z-index: 1;
+    }
+
+    /* Push all hero text & button above the overlay */
+    .hero-badge,
+    .hero h1,
+    .hero p,
+    .hero .btn-primary {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.096);
+      color: var(--color-accent);
+      border: 1px solid rgb(138, 138, 138);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 7vw, 5.5rem); /* clamp = responsive font size! */
+      font-weight: 800;
+      line-height: 1.05;
+      max-width: 800px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 span {
+      color: var(--color-accent);
+    }
+
+    .hero p {
+      color: var(--color-muted);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 2.5rem;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(119, 48, 48, 0.3);
+    }
+
+    /* =============================================
+       FEATURES SECTION
+       This uses CSS Flexbox — try changing flex-wrap
+       or the card width to see what happens!
+    ============================================= */
+    .features {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 3rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .card {
+      flex: 1 1 280px; /* grow, shrink, base width — key flexbox trick! */
+      background: var(--color-surface);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(253, 253, 253, 0.2);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+    }
+
+    /* =============================================
+       TESTIMONIALS SECTION
+    ============================================= */
+    .testimonials {
+      background: var(--color-surface);
+      padding: 5rem 2rem;
+    }
+
+    .testimonials-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .testimonial-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .testimonial {
+      flex: 1 1 280px;
+      background: var(--color-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+
+    .testimonial blockquote {
+      color: var(--color-text);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .testimonial cite {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      font-style: normal;
+    }
+
+    /* =============================================
+       CTA / FOOTER SECTION
+    ============================================= */
+    .cta {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      color: var(--color-muted);
+      margin-bottom: 2rem;
+    }
+
+    .signup-form {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .signup-form input[type="email"] {
+      flex: 1 1 220px;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .signup-form input[type="email"]:focus {
+      border-color: var(--color-accent);
+    }
+
+    #form-message {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--color-accent);
+      min-height: 1.4em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--color-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    /* =============================================
+       RESPONSIVE DESIGN — MEDIA QUERIES
+       These rules kick in on screens under 600px wide.
+       Try: open DevTools > toggle device toolbar to test!
+    ============================================= */
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none; /* TODO: could you build a hamburger menu instead? */
+      }
+
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+
+      .cards, .testimonial-grid {
+        flex-direction: column;
+      }
+
+      .signup-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVBAR
+  ============================================= -->
+  <nav id="navbar">
+    <div class="nav-logo">Instant<span>Water</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#cta">Get Started</a></li>
+      <li><a href="Specs.html">Specs</a></li>
+    </ul>
+  </nav>
+
+  <!-- =============================================
+       HERO SECTION
+  ============================================= -->
+  <section class="hero" id="home">
+
+    <!-- =============================================
+         VIDEO BACKGROUND
+         Replace "your-video.mp4" with your actual file name.
+         The video file must be in the same folder as this HTML file.
+         Great free water videos: https://www.pexels.com/search/videos/water/
+         Download as .mp4 and rename it to match the src below.
+    ============================================= -->
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="Water.mp4" type="video/mp4" />
+      <!-- autoplay    = starts playing automatically -->
+      <!-- muted       = required for autoplay to work in all browsers -->
+      <!-- loop        = restarts when it reaches the end -->
+      <!-- playsinline = prevents fullscreen on iOS devices -->
+    </video>
+
+    <div class="hero-badge">✦ Now available near you</div>
+    <h1>The only <span>Instant drink</span> you'll ever need</h1>
+    <p>
+      InstantWater Hydrates — faster, easier,
+      and without all the hassle. Replace your old hydration habits today.
+    </p>
+    <button class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+      Get Early Access →
+    </button>
+  </section>
+
+  <!-- =============================================
+       FEATURES SECTION
+  ============================================= -->
+  <section class="features" id="features">
+    <p class="section-label">Why InstantWater?</p>
+    <h2 class="section-title">Everything you need,<br />nothing you don't.</h2>
+
+    <div class="cards">
+
+      <!-- CARD 1 — duplicate this block to add more cards! -->
+      <div class="card">
+        <div class="card-icon">🏃‍➡️</div>
+        <h3>Works Instantly</h3>
+        <p>Simply add water and watch the magic happen!</p>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="card">
+        <div class="card-icon">♻️</div>
+        <h3>Unlimited Uses</h3>
+        <p>Use InstantWater as much as you want, no limits or restrictions.</p>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <h3>Guaranteed Results</h3>
+        <p>Works every time or your money back!</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       TESTIMONIALS SECTION
+  ============================================= -->
+  <section class="testimonials" id="testimonials">
+    <div class="testimonials-inner">
+      <p class="section-label">What people are saying</p>
+      <h2 class="section-title">Real results, real people.</h2>
+
+      <div class="testimonial-grid">
+
+        <div class="testimonial">
+          <blockquote>"InstantWater is the most sustainable source of water available."</blockquote>
+          <cite>— Ryan H., Product Designer</cite>
+        </div>
+
+        <div class="testimonial">
+          <blockquote>"Worked the second I added water!"</blockquote>
+          <cite>— Bob G., Founder</cite>
+        </div>
+
+        <div class="testimonial">
+          <blockquote>"Finally — a product that delivers on its promises!"</blockquote>
+          <cite>— Josh T., Developer</cite>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       CTA SECTION
+  ============================================= -->
+  <section class="cta" id="cta">
+    <h2>Ready to start hydrating instantly?</h2>
+    <p>Join thousands of people already using InstantWater. No credit card required.</p>
+
+    <!-- FORM: JavaScript below handles the submit -->
+    <div class="signup-form">
+      <input type="email" id="email-input" placeholder="you@example.com" />
+      <button class="btn-primary" onclick="handleSignup()">Join the waitlist</button>
+    </div>
+    <p id="form-message"></p>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <p>©2026 InstantWater Inc.</p>
+    <p><a href="legal.html" style="color: var(--color-accent)">Legal</a></p>
+  </footer>
+
+
+  <!-- =============================================
+       JAVASCRIPT
+       Two features here for you to study:
+       1. Sticky navbar that changes style on scroll
+       2. Email form validation
+  ============================================= -->
+  <script>
+    // ── FEATURE 1: Sticky navbar ──────────────────
+    // We listen for the "scroll" event on the window.
+    // When the user scrolls down more than 60px, we
+    // add a CSS class that gives the navbar a background.
+
+    window.addEventListener('scroll', function () {
+      const navbar = document.getElementById('navbar');
+
+      if (window.scrollY > 60) {
+        // scrollY = how many pixels down the user has scrolled
+        navbar.style.background  = 'rgba(10, 10, 15, 0.95)';
+        navbar.style.backdropFilter = 'blur(12px)';
+        navbar.style.position    = 'sticky';
+        navbar.style.top         = '0';
+        navbar.style.zIndex      = '100';
+      } else {
+        navbar.style.background  = 'transparent';
+        navbar.style.backdropFilter = 'none';
+      }
+    });
+
+
+    // ── FEATURE 2: Email form validation ──────────
+    // This function runs when the button is clicked.
+    // It checks if the email looks valid before "submitting".
+
+    function handleSignup() {
+      const input   = document.getElementById('email-input');
+      const message = document.getElementById('form-message');
+      const email   = input.value.trim();
+
+      // Basic check: does it contain "@" and a "."?
+      const isValid = email.includes('@') && email.includes('.');
+
+      if (email === '') {
+        // Case 1: empty field
+        message.style.color = '#ff6b6b';
+        message.textContent = '⚠ Please enter your email address.';
+      } else if (!isValid) {
+        // Case 2: something typed but doesn't look like an email
+        message.style.color = '#ff6b6b';
+        message.textContent = '⚠ That doesn\'t look like a valid email — try again!';
+      } else {
+        // Case 3: looks good!
+        message.style.color = 'var(--color-accent)';
+        message.textContent = '🎉 You\'re on the list! We\'ll be in touch soon.';
+        input.value = '';  // Clear the field after success
+      }
+    }
+
+    // BONUS: let the user press Enter to submit too
+    document.getElementById('email-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
+
+</body>
+</html>

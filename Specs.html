@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InstantWater — Specs</title>
+
+  <!-- Same fonts as your main page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poiret+One&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================
+       CSS VARIABLES — same as your main page so
+       both pages share the same look and feel!
+    ============================================= */
+    :root {
+      --color-bg:      #0a0a0f;
+      --color-surface: #13131a;
+      --color-accent:  #5ca4d4;
+      --color-text:    #f0f0f0;
+      --color-muted:   #888899;
+      --font-display:  'Poiret One', sans-serif;
+      --font-body:     'DM Sans', sans-serif;
+      --radius:        12px;
+      --max-width:     1100px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =============================================
+       NAVBAR — same as main page
+    ============================================= */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span {
+      color: var(--color-accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--color-muted);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-text);
+    }
+
+    /* Highlight the active page link */
+    .nav-links a.active {
+      color: var(--color-accent);
+    }
+
+    /* =============================================
+       PAGE HEADER
+    ============================================= */
+    .page-header {
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 span {
+      color: var(--color-accent);
+    }
+
+    .page-header p {
+      color: var(--color-muted);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* =============================================
+       SPEC HERO IMAGE
+       Replace "your-spec-image.jpg" with a real image.
+       Great free water images: https://www.pexels.com/search/water/
+    ============================================= */
+    .spec-hero-image {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .spec-hero-image img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;        /* crops image neatly to fill the box */
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.07);
+
+      /* Placeholder style shown when no image is loaded yet */
+      background: var(--color-surface);
+    }
+
+    .image-caption {
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+    }
+
+    /* =============================================
+       SPEC ROWS
+       Each row alternates: image left / text right,
+       then image right / text left.
+       This is a common layout pattern called
+       "alternating content rows" or "zigzag layout".
+    ============================================= */
+    .specs-section {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+    }
+
+    .spec-row {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      margin-bottom: 5rem;
+    }
+
+    /* Every even row flips the order so image alternates sides */
+    .spec-row:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .spec-row-image {
+      flex: 1;               /* takes up half the row */
+      min-width: 0;          /* prevents flex overflow */
+    }
+
+    .spec-row-image img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.07);
+      background: var(--color-surface);
+      transition: transform 0.3s;
+    }
+
+    .spec-row-image img:hover {
+      transform: scale(1.02);  /* subtle zoom on hover */
+    }
+
+    .spec-row-content {
+      flex: 1;               /* takes up the other half */
+    }
+
+    .spec-tag {
+      display: inline-block;
+      background: rgba(92, 164, 212, 0.1);
+      color: var(--color-accent);
+      border: 1px solid rgba(92, 164, 212, 0.3);
+      border-radius: 999px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .spec-row-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .spec-row-content p {
+      color: var(--color-muted);
+      font-size: 0.975rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Spec stat pills — the little data points */
+    .spec-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .stat {
+      background: var(--color-surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      padding: 0.6rem 1.1rem;
+      font-size: 0.85rem;
+    }
+
+    .stat strong {
+      color: var(--color-accent);
+      display: block;
+      font-size: 1.1rem;
+      font-family: var(--font-display);
+    }
+
+    /* =============================================
+       FULL SPECS TABLE
+    ============================================= */
+    .specs-table-section {
+      background: var(--color-surface);
+      padding: 5rem 2rem;
+    }
+
+    .specs-table-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .specs-table-inner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;   /* removes gaps between table cells */
+      font-size: 0.95rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.85rem 1rem;
+      color: var(--color-accent);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--color-muted);
+    }
+
+    td:first-child {
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* =============================================
+       BACK BUTTON
+    ============================================= */
+    .back-bar {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 3rem 2rem 0;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-muted);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--color-accent);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--color-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      margin-top: 4rem;
+    }
+
+    /* =============================================
+       RESPONSIVE — stacks rows on mobile
+    ============================================= */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+
+      .spec-row,
+      .spec-row:nth-child(even) {
+        flex-direction: column;  /* stack image above text on small screens */
+        gap: 1.5rem;
+      }
+
+      .spec-row-image img {
+        height: 220px;
+      }
+
+      table { font-size: 0.85rem; }
+      th, td { padding: 0.65rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVBAR
+       The "Specs" link has class="active" so it
+       appears highlighted in your accent color.
+  ============================================= -->
+  <nav id="navbar">
+    <div class="nav-logo">Instant<span>Water</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="Specs.html" class="active">Specs</a></li>
+      <li><a href="index.html#cta">Get Started</a></li>
+    </ul>
+  </nav>
+
+  <!-- Back link -->
+  <div class="back-bar">
+    <a href="index.html" class="btn-back">← Back to Home</a>
+  </div>
+
+  <!-- =============================================
+       PAGE HEADER
+  ============================================= -->
+  <header class="page-header">
+    <p class="section-label">Water Specs</p>
+    <h1>What makes <span>InstantWater</span><br/>so effective?</h1>
+    <p>We only use locally sourced materials. Here's the science behind the world's most efficient hydration solution.</p>
+  </header>
+
+  <!-- =============================================
+       HERO IMAGE
+       Replace src="" with a path to a real image.
+       Example: src="water-hero.jpg"
+       Download free images at https://www.pexels.com
+  ============================================= -->
+  <div class="spec-hero-image">
+    <img
+      src="bottle.png"type="image/png"
+      alt="InstantWater product overview"
+      onerror="this.style.minHeight='420px'; this.alt='📷 Add your hero image here — replace src with your image file path'"
+    />
+    <p class="image-caption">InstantWater — engineered for peak hydration performance</p>
+  </div>
+
+  <!-- =============================================
+       SPEC ROWS
+       Each .spec-row has an image and a text block.
+       Even-numbered rows automatically flip (image right).
+       To add more rows: copy a whole .spec-row block!
+  ============================================= -->
+  <section class="specs-section">
+
+    <!-- ROW 1 — image LEFT, text RIGHT -->
+    <div class="spec-row">
+      <div class="spec-row-image">
+        <!--
+          Replace src="" with your image file.
+          Example: src="water-molecules.jpg"
+        -->
+        <img
+          src="Two parts hydrogen, one part oxygen.png"type="image/png"
+          alt="Molecular composition"
+          onerror="this.style.minHeight='320px'"
+        />
+      </div>
+      <div class="spec-row-content">
+        <span class="spec-tag">Composition</span>
+        <h2>Two parts hydrogen,<br/>one part oxygen</h2>
+        <p>
+          Earth's proprietary H₂O formula has been refined over billions of years
+          to achieve perfect molecular balance. Each molecule is has been naturally forged into perfection.
+        </p>
+        <div class="spec-stats">
+          <div class="stat"><strong>H₂O</strong>Formula</div>
+          <div class="stat"><strong>100%</strong>Pure</div>
+          <div class="stat"><strong>0 cal</strong>Per serving</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2 — image RIGHT (auto-flipped), text LEFT -->
+    <div class="spec-row">
+      <div class="spec-row-image">
+        <img
+          src="Fast.png"type="image/png"
+          alt="Hydration speed test"
+          onerror="this.style.minHeight='320px'"
+        />
+      </div>
+      <div class="spec-row-content">
+        <span class="spec-tag">Performance</span>
+        <h2>Creation at the speed<br/>of pouring</h2>
+        <p>
+          InstantWater is created in real-time, ensuring you get the freshest hydration possible. The microsecond you pour water, your InstantWater is ready. No more waiting.
+        </p>
+        <div class="spec-stats">
+          <div class="stat"><strong>~0ms</strong>Latency</div>
+          <div class="stat"><strong>instant</strong>Absorption</div>
+          <div class="stat"><strong>∞</strong>Scalable</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3 — image LEFT, text RIGHT -->
+    <div class="spec-row">
+      <div class="spec-row-image">
+        <img
+          src="refill.png"type="image/png"
+          alt="Sustainability"
+          onerror="this.style.minHeight='320px'"
+        />
+      </div>
+      <div class="spec-row-content">
+        <span class="spec-tag">Sustainability</span>
+        <h2>Infinitely renewable.<br/>Endlessly recyclable.</h2>
+        <p>
+          InstantWater participates in the world's oldest supply chain: the
+          water cycle. After use, your water evaporates, forms clouds, and
+          returns as rain — completely free of charge.
+        </p>
+        <div class="spec-stats">
+          <div class="stat"><strong>0%</strong>Waste</div>
+          <div class="stat"><strong>4B+ yrs</strong>Track record</div>
+          <div class="stat"><strong>♻️</strong>Self-renewing</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =============================================
+       FULL SPECS TABLE
+       Add or remove rows to update the spec list.
+  ============================================= -->
+  <section class="specs-table-section">
+    <div class="specs-table-inner">
+      <p class="section-label">Full Specifications</p>
+      <h2>By the numbers.</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Specification</th>
+            <th>Value</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chemical Formula</td>
+            <td>H₂O</td>
+            <td>Two hydrogen atoms, one oxygen</td>
+          </tr>
+          <tr>
+            <td>Molecular Weight</td>
+            <td>18.015 g/mol</td>
+            <td>Lightweight by design</td>
+          </tr>
+          <tr>
+            <td>Boiling Point</td>
+            <td>100°C / 212°F</td>
+            <td>At standard atmospheric pressure</td>
+          </tr>
+          <tr>
+            <td>Freezing Point</td>
+            <td>0°C / 32°F</td>
+            <td>Also works as ice — versatile!</td>
+          </tr>
+          <tr>
+            <td>Calories per serving</td>
+            <td>0 kcal</td>
+            <td>Great for any diet</td>
+          </tr>
+          <tr>
+            <td>Taste</td>
+            <td>Neutral</td>
+            <td>Pairs well with everything</td>
+          </tr>
+          <tr>
+            <td>Shelf life</td>
+            <td>Indefinite</td>
+            <td>When stored in a sealed container</td>
+          </tr>
+          <tr>
+            <td>Availability</td>
+            <td>Worldwide</td>
+            <td>Oceans, taps, rain clouds</td>
+          </tr>
+          <tr>
+            <td>Compatibility</td>
+            <td>All known life forms</td>
+            <td>No exceptions found yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <p>©2026 InstantWater Inc. · <a href="specs.html" style="color: var(--color-accent)">Specs</a> · <a href="landing-page-starter.html">Home</a></p>
+    <p><a href="legal.html" style="color: var(--color-accent)">Legal</a></p>
+  </footer>
+
+  <script>
+    // Sticky navbar — same behaviour as your main page
+    window.addEventListener('scroll', function () {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 60) {
+        navbar.style.background     = 'rgba(10, 10, 15, 0.95)';
+        navbar.style.backdropFilter = 'blur(12px)';
+        navbar.style.position       = 'sticky';
+        navbar.style.top            = '0';
+        navbar.style.zIndex         = '100';
+      } else {
+        navbar.style.background     = 'transparent';
+        navbar.style.backdropFilter = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>
